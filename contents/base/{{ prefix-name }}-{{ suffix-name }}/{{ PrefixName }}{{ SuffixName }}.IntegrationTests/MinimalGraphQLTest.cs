@@ -79,7 +79,7 @@ public class MinimalGraphQLTest
         var nonExistentId = Guid.NewGuid().ToString();
 
         var query = $@"{{
-            ""query"": ""mutation {{ delete{{ PrefixName }}(id: \""{nonExistentId}\"") {{'{'}}{ success message }} }}""
+            ""query"": ""mutation {{ delete{{ PrefixName }}(id: \""{nonExistentId}\"") {{ success message }} }}""
         }}";
 
         var content = new StringContent(query, Encoding.UTF8, "application/json");
