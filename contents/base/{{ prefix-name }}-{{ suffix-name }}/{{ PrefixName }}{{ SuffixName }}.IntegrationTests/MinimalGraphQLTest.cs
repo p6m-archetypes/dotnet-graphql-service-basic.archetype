@@ -78,9 +78,9 @@ public class MinimalGraphQLTest
         var url = $"http://localhost:5041/graphql";
         var nonExistentId = Guid.NewGuid().ToString();
 
-        var query = $@"{{
-            ""query"": ""mutation delete{{ PrefixName }}(id: \""{nonExistentId}\"") { success message } }""
-        }}";
+        var query = @"{
+            ""query"": ""mutation { delete{{ PrefixName }}(id: \""" + nonExistentId + @"\"") { success message } }""
+        }";
 
         var content = new StringContent(query, Encoding.UTF8, "application/json");
         var response = await client.PostAsync(url, content);
