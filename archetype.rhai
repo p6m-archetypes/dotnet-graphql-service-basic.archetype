@@ -20,13 +20,13 @@ context += render(Archetype("project-prompts"), ANSWERS + #{
     ],
 }, render_settings);
 
-// context += prompt("Persistence:", "persistence", #{
-//   type: Select([
-//     "CockroachDB",
-//     "None",
-//   ]),
-//   defaults_with: "CockroachDB",
-// });
+context += prompt("Persistence:", "persistence", #{
+  type: Select([
+    "CockroachDB",
+    "None",
+  ]),
+  defaults_with: "CockroachDB",
+});
 
 context += prompt("Artifactory Host:", "artifactory-host", #{
   defaults_with: "p6m.jfrog.io",
@@ -42,23 +42,44 @@ if switch_enabled("debug-context") {
     display(as_yaml(context));
 }
 
-render(Directory("contents/base"), context);
+render(Archetype("manifests"), context["project-name"], context + #{
+  "language": ".Net",
+  "protocol": "GraphQL",
+});
 
-// if context["persistence"] == "CockroachDB" {
-//   render(Directory("contents/persistence"), context);
-//   for entity_key in context.model.entities.keys() {
-//     let entity = context.model.entities[entity_key];
-//     let entity_context = #{};
-//     entity_context += set("entity-name", entity_key, #{
-//         cases: [
-//             CasedIdentityCasedValue(PROGRAMMING_CASES),
-//         ],
-//     });
-//     render(Directory("contents/persistence_entity"), context + entity_context);
-//   }
-// }
+//
+// Publishing
+//
+if switch_enabled("zip") {
+  zip(context["project-name"], render("{{ project-name }}.zip", context));
+}
+if switch_enabled("tarball") {
+  tar_gz(context["project-name"], render("{{ project-name }}.tar.gz", context));
+}
 
-// render(Archetype("manifests"), context["artifact-id"], context);
+if switch_enabled("git-init") || switch_enabled("git-publish") {
+  git_init(context["project-name"], "main");
+  git_add_all(context["project-name"]);
+  git_commit(context["project-name"], "initial commit");
+  git_remote_add(context["project-name"], "origin", render("https://github.com/{{ org-solution-name }}/{{ project-name }}.git", context));
 
-// Return Context
+  if switch_enabled("git-publish") {
+    gh_repo_create(render("{{ org-solution-name }}/{{ project-name }}", context), Private);
+    git_push(context["project-name"], "origin", "main");
+  }
+} else {
+  display();
+
+  log(Info, "Copy and paste the following commands to publish your project:");
+
+  display();
+
+  display(render("cd {{ project-name }}", context));
+  display("git init -b main");
+  display(render("gh repo create {{ org-solution-name }}/{{ project-name }} --private --source=. --remote=origin", context));
+  display("git add .");
+  display("git commit -m 'initial commit'");
+  display("git push -u origin HEAD");
+}
+
 context
