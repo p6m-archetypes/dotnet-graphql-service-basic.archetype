@@ -42,6 +42,8 @@ if switch_enabled("debug-context") {
     display(as_yaml(context));
 }
 
+render(Directory("contents/base"), context);
+
 render(Archetype("manifests"), context["project-name"], context + #{
   "language": ".Net",
   "protocol": "GraphQL",
