@@ -1,5 +1,5 @@
 using {{ PrefixName }}{{ SuffixName }}.API;
-using {{ PrefixName }}{{ SuffixName }}.API.Schema;
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
 using {{ PrefixName }}{{ SuffixName }}.Core.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;

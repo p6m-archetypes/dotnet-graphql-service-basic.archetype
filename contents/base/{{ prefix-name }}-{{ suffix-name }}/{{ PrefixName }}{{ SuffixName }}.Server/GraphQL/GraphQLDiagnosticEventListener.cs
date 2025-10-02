@@ -1,13 +1,14 @@
 using HotChocolate.Diagnostics;
 using HotChocolate.Execution;
 using HotChocolate.Execution.Instrumentation;
+using HotChocolate;
 using Microsoft.Extensions.Logging;
 using {{ PrefixName }}{{ SuffixName }}.Server.Services;
 using System.Diagnostics;
 
 namespace {{ PrefixName }}{{ SuffixName }}.Server.GraphQL;
 
-public class GraphQLDiagnosticEventListener : DiagnosticEventListener
+public class GraphQLDiagnosticEventListener : ExecutionDiagnosticEventListener
 {
     private readonly ILogger<GraphQLDiagnosticEventListener> _logger;
     private readonly MetricsService _metricsService;

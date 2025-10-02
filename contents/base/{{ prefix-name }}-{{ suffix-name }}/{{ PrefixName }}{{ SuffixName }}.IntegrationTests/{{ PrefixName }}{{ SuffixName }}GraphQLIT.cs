@@ -1,3 +1,4 @@
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
 using {{ PrefixName }}{{ SuffixName }}.API.Schema;
 using {{ PrefixName }}{{ SuffixName }}.Client;
 using Xunit.Abstractions;
@@ -32,21 +33,21 @@ public class {{ PrefixName }}{{ SuffixName }}GraphQLIT(ITestOutputHelper testOut
         testOutputHelper.WriteLine("Test_Get{{ PrefixName }}s");
 
         // Arrange
-        var beforeResponse = await _client.Get{{ PrefixName }}s("1", 10);
-        var beforeTotal = beforeResponse.TotalCount;
+        var beforeResponse = await _client.Get{{ PrefixName }}s(new Get{{ PrefixName }}sRequest { StartPage = 1, PageSize = 10 });
+        var beforeTotal = beforeResponse.TotalElements;
 
         // Create a new item
         var createInput = new Create{{ PrefixName }}Input { Name = Guid.NewGuid().ToString() };
         await _client.Create{{ PrefixName }}(createInput);
 
         // Act
-        var response = await _client.Get{{ PrefixName }}s("1", 10);
+        var response = await _client.Get{{ PrefixName }}s(new Get{{ PrefixName }}sRequest { StartPage = 1, PageSize = 10 });
 
         // Assert
         Assert.NotNull(response);
-        Assert.Equal(beforeTotal + 1, response.TotalCount);
-        Assert.NotNull(response.Items);
-        Assert.NotEmpty(response.Items);
+        Assert.Equal(beforeTotal + 1, response.TotalElements);
+        Assert.NotNull(response.{{ PrefixName }}s);
+        Assert.NotEmpty(response.{{ PrefixName }}s);
     }
 
     [Fact]
@@ -62,8 +63,9 @@ public class {{ PrefixName }}{{ SuffixName }}GraphQLIT(ITestOutputHelper testOut
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(createdId, result.Id);
-        Assert.Equal(createInput.Name, result.Name);
+        Assert.NotNull(result.{{ PrefixName }});
+        Assert.Equal(createdId, result.{{ PrefixName }}.Id);
+        Assert.Equal(createInput.Name, result.{{ PrefixName }}.Name);
     }
 
     [Fact]
@@ -104,11 +106,9 @@ public class {{ PrefixName }}{{ SuffixName }}GraphQLIT(ITestOutputHelper testOut
         // Assert
         Assert.NotNull(response);
         Assert.True(response.Success);
-        Assert.NotNull(response.Message);
 
-        // Verify deletion
-        var getResult = await _client.Get{{ PrefixName }}(createdId!);
-        Assert.Null(getResult);
+        // Verify deletion - should throw exception when not found
+        await Assert.ThrowsAsync<{{ PrefixName }}{{ SuffixName }}Client.GraphQLException>(() => _client.Get{{ PrefixName }}(createdId!));
     }
 
     [Fact]
@@ -118,14 +118,14 @@ public class {{ PrefixName }}{{ SuffixName }}GraphQLIT(ITestOutputHelper testOut
         var nonExistentId = Guid.NewGuid().ToString();
 
         // Act & Assert
-        // HotChocolate returns HTTP 500 for entity not found errors, causing GraphQLHttpRequestException
-        var exception = await Assert.ThrowsAsync<GraphQL.Client.Http.GraphQLHttpRequestException>(async () =>
+        // GraphQL returns an error for entity not found
+        var exception = await Assert.ThrowsAsync<{{ PrefixName }}{{ SuffixName }}Client.GraphQLException>(async () =>
         {
             await _client.Delete{{ PrefixName }}(nonExistentId);
         });
 
-        // The exception message should indicate an internal server error
-        Assert.Contains("InternalServerError", exception.Message);
+        // The exception message should indicate the entity was not found
+        Assert.Contains("not found", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -140,22 +140,18 @@ public class {{ PrefixName }}{{ SuffixName }}GraphQLIT(ITestOutputHelper testOut
         }
 
         // Act - Get first page
-        var firstPage = await _client.Get{{ PrefixName }}s("1", 2);
+        var firstPage = await _client.Get{{ PrefixName }}s(new Get{{ PrefixName }}sRequest { StartPage = 1, PageSize = 2 });
 
         // Assert
         Assert.NotNull(firstPage);
-        Assert.Equal(2, firstPage.Items.Count());
-        Assert.NotNull(firstPage.PageInfo);
-        Assert.True(firstPage.PageInfo.HasNextPage);
-        Assert.False(firstPage.PageInfo.HasPreviousPage);
+        Assert.Equal(2, firstPage.{{ PrefixName }}s.Count);
+        Assert.True(firstPage.TotalElements >= itemsToCreate);
 
         // Act - Get next page
-        var secondPage = await _client.Get{{ PrefixName }}s(firstPage.PageInfo.NextPage, 2);
+        var secondPage = await _client.Get{{ PrefixName }}s(new Get{{ PrefixName }}sRequest { StartPage = 2, PageSize = 2 });
 
         // Assert
         Assert.NotNull(secondPage);
-        Assert.True(secondPage.Items.Any());
-        Assert.NotNull(secondPage.PageInfo);
-        Assert.True(secondPage.PageInfo.HasPreviousPage);
+        Assert.True(secondPage.{{ PrefixName }}s.Any());
     }
 }

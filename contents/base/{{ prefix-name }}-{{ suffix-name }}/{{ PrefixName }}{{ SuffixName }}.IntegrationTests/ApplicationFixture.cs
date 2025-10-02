@@ -36,9 +36,8 @@ public class ApplicationFixture : IDisposable
 
     private string GetGraphQLUrl()
     {
-        // Get the HTTP port from the server configuration
-        var httpPort = _server.GetConfiguration()["HTTP_PORT"] ?? "5031";
-        return $"http://localhost:{httpPort}/graphql";
+        var httpUrl = _server.getHttpUrl() ?? "http://localhost:5031";
+        return $"{httpUrl}/graphql";
     }
 
     public {{ PrefixName }}{{ SuffixName }}Client GetClient() => _client;

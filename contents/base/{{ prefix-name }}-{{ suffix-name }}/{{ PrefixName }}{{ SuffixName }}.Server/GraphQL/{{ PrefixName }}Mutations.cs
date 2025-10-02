@@ -2,7 +2,8 @@ using HotChocolate;
 using HotChocolate.Authorization;
 using HotChocolate.Types;
 using Microsoft.Extensions.Logging;
-using {{ PrefixName }}{{ SuffixName }}.API.Schema;
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
+using Schema = {{ PrefixName }}{{ SuffixName }}.API.Schema;
 using {{ PrefixName }}{{ SuffixName }}.Core;
 
 namespace {{ PrefixName }}{{ SuffixName }}.Server.GraphQL;

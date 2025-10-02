@@ -1,9 +1,9 @@
 ---
-description: ".NET gRPC Service, Namespaced, Modular Microservice"
-authors: ["Maksym Mukhanov"]
+description: ".NET GraphQL Service, Namespaced, Modular Microservice"
+authors: ["Maksym Mukhanov", "Jimmie Fulton"]
 languages: ["C#"]
-frameworks: [".NET", "Entities Framework", "gRPC"]
-tags: ["Modular", "Service", "Microservice", "gRPC"]
+frameworks: [".NET", "Entities Framework", "GraphQL"]
+tags: ["Modular", "Service", "Microservice", "GraphQL"]
 
 requires:
   archetect: 2.0.0

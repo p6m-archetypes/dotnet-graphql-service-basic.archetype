@@ -22,7 +22,7 @@ public class MinimalGraphQLTest
     public async Task Test_GraphQL_Introspection()
     {
         using var client = new HttpClient();
-        var url = $"http://localhost:5041/graphql";
+        var url = $"{_fixture.GetServer().getHttpUrl()}/graphql";
 
         var query = @"{
             ""query"": ""{ __schema { queryType { name } } }""
@@ -42,7 +42,8 @@ public class MinimalGraphQLTest
     public async Task Test_Health_Endpoint()
     {
         using var client = new HttpClient();
-        var response = await client.GetAsync("http://localhost:5041/health");
+        var url = $"{_fixture.GetServer().getHttpUrl()}/health";
+        var response = await client.GetAsync(url);
 
         _output.WriteLine($"Health Status: {response.StatusCode}");
         var responseBody = await response.Content.ReadAsStringAsync();
@@ -55,7 +56,7 @@ public class MinimalGraphQLTest
     public async Task Test_Simple_Query()
     {
         using var client = new HttpClient();
-        var url = $"http://localhost:5041/graphql";
+        var url = $"{_fixture.GetServer().getHttpUrl()}/graphql";
 
         var query = @"{
             ""query"": ""{ {{ prefixName }}s(pageSize: 5) { items { id name } } }""
@@ -75,7 +76,7 @@ public class MinimalGraphQLTest
     public async Task Test_Delete_NonExistent()
     {
         using var client = new HttpClient();
-        var url = $"http://localhost:5041/graphql";
+        var url = $"{_fixture.GetServer().getHttpUrl()}/graphql";
         var nonExistentId = Guid.NewGuid().ToString();
 
         var query = @"{

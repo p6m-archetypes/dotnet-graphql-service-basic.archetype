@@ -2,7 +2,9 @@ using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
 using {{ PrefixName }}{{ SuffixName }}.API;
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
 using {{ PrefixName }}{{ SuffixName }}.API.Schema;
+using Schema = {{ PrefixName }}{{ SuffixName }}.API.Schema;
 using System.Net.Http.Headers;
 
 namespace {{ PrefixName }}{{ SuffixName }}.Client;
@@ -63,7 +65,7 @@ public class {{ PrefixName }}{{ SuffixName }}Client : I{{ PrefixName }}{{ Suffix
         return response.Data.Create{{ PrefixName }};
     }
 
-    public async Task<{{ PrefixName }}Connection> Get{{ PrefixName }}s(string? startPage, int? pageSize)
+    public async Task<Get{{ PrefixName }}sResponse> Get{{ PrefixName }}s(Get{{ PrefixName }}sRequest request)
     {
         var query = new GraphQLRequest
         {
@@ -84,7 +86,7 @@ public class {{ PrefixName }}{{ SuffixName }}Client : I{{ PrefixName }}{{ Suffix
                         totalCount
                     }
                 }",
-            Variables = new { startPage, pageSize }
+            Variables = new { startPage = request.StartPage.ToString(), pageSize = request.PageSize }
         };
 
         var response = await _graphQLClient.SendQueryAsync<Get{{ PrefixName }}sData>(query);
@@ -94,10 +96,14 @@ public class {{ PrefixName }}{{ SuffixName }}Client : I{{ PrefixName }}{{ Suffix
             throw new GraphQLException($"GraphQL errors: {string.Join(", ", response.Errors.Select(e => e.Message))}");
         }
 
-        return response.Data.{{ PrefixName }}s;
+        return new Get{{ PrefixName }}sResponse
+        {
+            {{ PrefixName }}s = response.Data.{{ PrefixName }}s.Items,
+            TotalElements = response.Data.{{ PrefixName }}s.TotalCount
+        };
     }
 
-    public async Task<{{ PrefixName }}Dto?> Get{{ PrefixName }}(string id)
+    public async Task<Get{{ PrefixName }}Response> Get{{ PrefixName }}(string id)
     {
         var query = new GraphQLRequest
         {
@@ -118,7 +124,15 @@ public class {{ PrefixName }}{{ SuffixName }}Client : I{{ PrefixName }}{{ Suffix
             throw new GraphQLException($"GraphQL errors: {string.Join(", ", response.Errors.Select(e => e.Message))}");
         }
 
-        return response.Data.{{ PrefixName }};
+        if (response.Data.{{ PrefixName }} == null)
+        {
+          throw new GraphQLException("{{ PrefixName }} not found");
+        }
+
+        return new Get{{ PrefixName }}Response
+        {
+            {{ PrefixName }} = response.Data.{{ PrefixName }}
+        };
     }
 
     public async Task<Update{{ PrefixName }}Response> Update{{ PrefixName }}(Update{{ PrefixName }}Input input)

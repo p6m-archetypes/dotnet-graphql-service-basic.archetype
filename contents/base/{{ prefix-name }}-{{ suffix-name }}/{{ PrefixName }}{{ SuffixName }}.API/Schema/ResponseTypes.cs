@@ -1,4 +1,5 @@
 using HotChocolate.Types;
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
 
 namespace {{ PrefixName }}{{ SuffixName }}.API.Schema;
 
@@ -49,18 +50,3 @@ public class Delete{{ PrefixName }}ResponseType : ObjectType<Delete{{ PrefixName
     }
 }
 
-public class Create{{ PrefixName }}Response
-{
-    public required {{ PrefixName }}Dto {{ PrefixName }} { get; set; }
-}
-
-public class Update{{ PrefixName }}Response
-{
-    public required {{ PrefixName }}Dto {{ PrefixName }} { get; set; }
-}
-
-public class Delete{{ PrefixName }}Response
-{
-    public required bool Success { get; set; }
-    public string? Message { get; set; }
-}

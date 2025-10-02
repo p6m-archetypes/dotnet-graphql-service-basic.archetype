@@ -1,4 +1,5 @@
 using HotChocolate.Types;
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
 
 namespace {{ PrefixName }}{{ SuffixName }}.API.Schema;
 
@@ -19,10 +20,4 @@ public class {{ PrefixName }}Type : ObjectType<{{ PrefixName }}Dto>
             .Type<NonNullType<StringType>>()
             .Description("The name of the {{ PrefixName }}");
     }
-}
-
-public class {{ PrefixName }}Dto
-{
-    public string? Id { get; set; }
-    public required string Name { get; set; }
 }

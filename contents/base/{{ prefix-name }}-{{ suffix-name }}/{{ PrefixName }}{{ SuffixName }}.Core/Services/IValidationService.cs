@@ -1,5 +1,5 @@
 using {{ PrefixName }}{{ SuffixName }}.API;
-using {{ PrefixName }}{{ SuffixName }}.API.Schema;
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
 
 namespace {{ PrefixName }}{{ SuffixName }}.Core.Services;
 

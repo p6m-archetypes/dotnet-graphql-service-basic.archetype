@@ -1,3 +1,4 @@
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
 using HotChocolate.Types;
 
 namespace {{ PrefixName }}{{ SuffixName }}.API.Schema;

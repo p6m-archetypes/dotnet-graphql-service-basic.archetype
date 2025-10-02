@@ -1,4 +1,5 @@
 using {{ PrefixName }}{{ SuffixName }}.API;
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
 using {{ PrefixName }}{{ SuffixName }}.API.Schema;
 using {{ PrefixName }}{{ SuffixName }}.Core.Services;
 using {{ PrefixName }}{{ SuffixName }}.Core.Exceptions;

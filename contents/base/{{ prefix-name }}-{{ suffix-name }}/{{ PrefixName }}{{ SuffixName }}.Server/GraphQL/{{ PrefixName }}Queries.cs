@@ -2,6 +2,7 @@ using HotChocolate;
 using HotChocolate.Authorization;
 using HotChocolate.Types;
 using Microsoft.Extensions.Logging;
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
 using {{ PrefixName }}{{ SuffixName }}.API.Schema;
 using {{ PrefixName }}{{ SuffixName }}.Core;
 
@@ -33,7 +34,7 @@ public class {{ PrefixName }}Queries
             var executionTime = (DateTime.UtcNow - startTime).TotalMilliseconds;
             _logger.LogInformation("Get{{ PrefixName }} completed in {ExecutionTime}ms", executionTime);
 
-            return result;
+            return result.{{ PrefixName }};
         }
         catch (Exception ex)
         {
@@ -55,13 +56,34 @@ public class {{ PrefixName }}Queries
 
         try
         {
-            var result = await core.Get{{ PrefixName }}s(startPage, pageSize);
+            var request = new Get{{ PrefixName }}sRequest
+            {
+                StartPage = int.TryParse(startPage, out var sp) ? sp : 1,
+                PageSize = pageSize ?? 10
+            };
+            var result = await core.Get{{ PrefixName }}s(request);
 
             var executionTime = (DateTime.UtcNow - startTime).TotalMilliseconds;
             _logger.LogInformation("Get{{ PrefixName }}s completed in {ExecutionTime}ms with {Count} items",
-                executionTime, result.Items.Count);
+                executionTime, result.{{ PrefixName }}s.Count);
 
-            return result;
+            // Convert to {{ PrefixName }}Connection
+            var totalPages = (int)Math.Ceiling((double)result.TotalElements / request.PageSize);
+            var currentPage = request.StartPage;
+
+            return new {{ PrefixName }}Connection
+            {
+                Items = result.{{ PrefixName }}s,
+                TotalCount = (int)result.TotalElements,
+                PageInfo = new PageInfo
+                {
+                    HasNextPage = currentPage < totalPages,
+                    HasPreviousPage = currentPage > 1,
+                    StartPage = currentPage.ToString(),
+                    NextPage = currentPage < totalPages ? (currentPage + 1).ToString() : null,
+                    PreviousPage = currentPage > 1 ? (currentPage - 1).ToString() : null
+                }
+            };
         }
         catch (Exception ex)
         {

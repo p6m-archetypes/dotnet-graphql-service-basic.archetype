@@ -1,4 +1,5 @@
 using HotChocolate.Types;
+using {{ PrefixName }}{{ SuffixName }}.API.Dtos;
 
 namespace {{ PrefixName }}{{ SuffixName }}.API.Schema;
 
@@ -35,13 +36,3 @@ public class Update{{ PrefixName }}InputType : InputObjectType<Update{{ PrefixNa
     }
 }
 
-public class Create{{ PrefixName }}Input
-{
-    public required string Name { get; set; }
-}
-
-public class Update{{ PrefixName }}Input
-{
-    public required string Id { get; set; }
-    public required string Name { get; set; }
-}
