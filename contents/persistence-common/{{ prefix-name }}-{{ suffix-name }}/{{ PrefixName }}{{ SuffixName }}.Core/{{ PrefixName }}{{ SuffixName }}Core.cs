@@ -143,7 +143,7 @@ public class {{ PrefixName }}{{ SuffixName }}Core : I{{ PrefixName }}{{ SuffixNa
         _repository.Delete(entity);
         await _repository.SaveChangesAsync();
 
-        _logger.LogInformation("Deleted sample with ID {Id}", entity.Id);
+        _logger.LogInformation("Deleted {{ prefixName }} with ID {Id}", entity.Id);
 
         return new Delete{{ PrefixName }}Response { Success = true };
     }

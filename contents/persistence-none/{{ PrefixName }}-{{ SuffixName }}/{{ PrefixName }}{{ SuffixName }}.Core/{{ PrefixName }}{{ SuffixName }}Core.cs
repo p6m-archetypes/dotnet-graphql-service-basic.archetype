@@ -9,7 +9,7 @@ using System.Collections.Concurrent;
 
 namespace {{ PrefixName }}{{ SuffixName }}.Core;
 
-public class {{ PrefixName }}{{ SuffixName }}Core : I{{ PrefixName }}{{ SuffixName }}Service
+public class {{ PrefixName }}{{ SuffixName }}Core : I{{ PrefixName }}{{ SuffixName }}
 {
     private readonly IValidationService _validationService;
     private readonly ILogger<{{ PrefixName }}{{ SuffixName }}Core> _logger;
@@ -23,13 +23,13 @@ public class {{ PrefixName }}{{ SuffixName }}Core : I{{ PrefixName }}{{ SuffixNa
         _logger = logger;
     }
 
-    public Task<Create{{ PrefixName }}Response> Create{{ PrefixName }}({{ PrefixName }}Dto request)
+    public Task<Create{{ PrefixName }}Response> Create{{ PrefixName }}(Create{{ PrefixName }}Input input)
     {
-        var id = string.IsNullOrEmpty(request.Id) ? Guid.NewGuid().ToString() : request.Id;
+        var id = Guid.NewGuid().ToString();
         var {{ prefixName }} = new {{ PrefixName }}Dto
         {
             Id = id,
-            Name = request.Name
+            Name = input.Name
         };
         _inMemoryStore[id] = {{ prefixName }};
 
@@ -75,14 +75,19 @@ public class {{ PrefixName }}{{ SuffixName }}Core : I{{ PrefixName }}{{ SuffixNa
         });
     }
 
-    public Task<Update{{ PrefixName }}Response> Update{{ PrefixName }}({{ PrefixName }}Dto {{ prefixName }})
+    public Task<Update{{ PrefixName }}Response> Update{{ PrefixName }}(Update{{ PrefixName }}Input input)
     {
-        if (string.IsNullOrEmpty({{ prefixName }}.Id) || !_inMemoryStore.ContainsKey({{ prefixName }}.Id))
+        if (string.IsNullOrEmpty(input.Id) || !_inMemoryStore.ContainsKey(input.Id))
         {
-            throw new EntityNotFoundException("{{ PrefixName }}", {{ prefixName }}.Id ?? "null");
+            throw new EntityNotFoundException("{{ PrefixName }}", input.Id ?? "null");
         }
 
-        _inMemoryStore[{{ prefixName }}.Id] = {{ prefixName }};
+        var {{ prefixName }} = new {{ PrefixName }}Dto
+        {
+            Id = input.Id,
+            Name = input.Name
+        };
+        _inMemoryStore[input.Id] = {{ prefixName }};
 
         return Task.FromResult(new Update{{ PrefixName }}Response
         {
@@ -97,6 +102,6 @@ public class {{ PrefixName }}{{ SuffixName }}Core : I{{ PrefixName }}{{ SuffixNa
             throw new EntityNotFoundException("{{ PrefixName }}", id);
         }
 
-        return Task.FromResult(new Delete{{ PrefixName }}Response { Deleted = true });
+        return Task.FromResult(new Delete{{ PrefixName }}Response { Success = true });
     }
 }

@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -138,7 +137,7 @@ public class Startup
         // Enable introspection in development and ephemeral environments
         if (env == "Development" || env == "Ephemeral" || disableAuth == "true")
         {
-            graphqlBuilder.AllowIntrospection(true);
+          graphqlBuilder.DisableIntrospection(false);
         }
 
         // Add health checks
