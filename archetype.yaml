@@ -1,8 +1,8 @@
 ---
-description: ".NET GraphQL Service, Namespaced, Modular Microservice"
-authors: ["Maksym Mukhanov", "Jimmie Fulton"]
+description: ".NET GraphQL Service, Modular"
+authors: ["Ybor Technology"]
 languages: ["C#"]
-frameworks: [".NET", "Entities Framework", "GraphQL"]
+frameworks: [".NET", "Entity Framework", "GraphQL"]
 tags: ["Modular", "Service", "Microservice", "GraphQL"]
 
 requires:
