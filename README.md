@@ -143,10 +143,35 @@ For complete property relationships, see [archetype.yaml](./archetype.yaml).
 
 This archetype is ideal for:
 
-1. **API Gateways**: Building flexible APIs with client-driven query capabilities
-2. **Data Aggregation Services**: Services that combine data from multiple sources
-3. **Customer-Facing APIs**: Public APIs requiring flexible querying without versioning concerns
-4. **Backend-for-Frontend (BFF)**: Tailored APIs for specific frontend applications
+1. **Domain Services**: GraphQL services focused on specific business domains
+   - Products service, Users service, Orders service
+   - Can be federated into a larger GraphQL gateway (schema stitching)
+   - Provides flexible querying within a single domain
+   - Alternative to REST for client-driven data fetching
+
+2. **Data Aggregation Services**: Services combining data from multiple sources
+   - Fetch from databases, REST APIs, gRPC services, message queues
+   - DataLoader for efficient batching and caching
+   - Resolve complex data graphs across multiple backends
+   - Transform and optimize data for client consumption
+
+3. **Backend-for-Frontend (BFF)**: Tailored APIs for specific client types
+   - Web BFF, Mobile BFF, Desktop BFF with optimized schemas
+   - Client-specific field selection and pagination strategies
+   - Reduce over-fetching by letting clients query exactly what they need
+   - Version-free APIs through schema evolution
+
+4. **Customer-Facing APIs**: Public GraphQL APIs with flexible querying
+   - Self-documenting schema with introspection
+   - Query complexity limits and depth restrictions
+   - Batched queries reduce network round-trips
+   - Modern alternative to versioned REST APIs
+
+**Architectural Note**: GraphQL services can be:
+- **Standalone**: Complete domain service with its own database
+- **Federated**: Part of a larger GraphQL gateway (schema federation)
+- **Aggregator**: Combines REST/gRPC services into a unified GraphQL API
+- **Hybrid**: Mix of direct data access and service delegation
 
 ## 📚 What's Inside
 
