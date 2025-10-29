@@ -8,8 +8,8 @@ COPY Directory.Build.props ./
 COPY NuGet.config ./
 COPY {{ PrefixName }}{{ SuffixName }}.API/*.csproj ./{{ PrefixName }}{{ SuffixName }}.API/
 COPY {{ PrefixName }}{{ SuffixName }}.Client/*.csproj ./{{ PrefixName }}{{ SuffixName }}.Client/
-COPY {{ PrefixName }}{{ SuffixName }}.Core/*.csproj ./{{ PrefixName }}{{ SuffixName }}.Core/
-COPY {{ PrefixName }}{{ SuffixName }}.Persistence/*.csproj ./{{ PrefixName }}{{ SuffixName }}.Persistence/
+COPY {{ PrefixName }}{{ SuffixName }}.Core/*.csproj ./{{ PrefixName }}{{ SuffixName }}.Core/{% if persistence != 'None' %}
+COPY {{ PrefixName }}{{ SuffixName }}.Persistence/*.csproj ./{{ PrefixName }}{{ SuffixName }}.Persistence/{% endif %}
 COPY {{ PrefixName }}{{ SuffixName }}.Server/*.csproj ./{{ PrefixName }}{{ SuffixName }}.Server/
 COPY {{ PrefixName }}{{ SuffixName }}.IntegrationTests/*.csproj ./{{ PrefixName }}{{ SuffixName }}.IntegrationTests/
 COPY {{ PrefixName }}{{ SuffixName }}.UnitTests/*.csproj ./{{ PrefixName }}{{ SuffixName }}.UnitTests/
