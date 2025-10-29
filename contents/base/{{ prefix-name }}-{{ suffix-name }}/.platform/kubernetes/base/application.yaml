@@ -1,9 +1,9 @@
 apiVersion: meta.p6m.dev/v1alpha1
 kind: PlatformApplication
 metadata:
-  name: dotnet-grpc-service
+  name: {{ prefix-name }}-{{ suffix-name }}
   labels:
-    p6m.dev/app: dotnet-grpc-service
+    p6m.dev/app: {{ prefix-name }}-{{ suffix-name }}
 spec:
   config:
     GRPC_PORT: "8080"  # Service Port
@@ -12,9 +12,9 @@ spec:
     ConnectionStrings__DefaultConnection: "Host=$(postgres_dotnet_grpc_service_db_endpoint);Port=$(postgres_dotnet_grpc_service_db_port);Database=dotnet_grpc_service_db;Username=$(postgres_dotnet_grpc_service_db_username);Password=$(postgres_dotnet_grpc_service_db_password);sslmode=require"
   resources: 
     postgres:
-      - name: dotnet-grpc-service
+      - name: {{ prefix-name }}-{{ suffix-name }}
   deployment:
-    image: dotnet-grpc-service-server:latest
+    image: {{ prefix-name }}-{{ suffix-name }}-server:latest
     ports:
       - protocol: grpc
         port: 8080
