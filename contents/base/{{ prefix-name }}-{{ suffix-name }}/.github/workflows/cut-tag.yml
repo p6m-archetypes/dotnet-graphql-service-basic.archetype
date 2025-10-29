@@ -65,6 +65,7 @@ jobs:
           image-name: {{ prefix-name }}-{{ suffix-name }}-server
           image-tag: ${{'{'}}{ steps.cut-tag.outputs.version }}
           registry: ${{'{'}}{ vars.ARTIFACTORY_HOSTNAME }}/${{'{'}}{ vars.ARTIFACTORY_PROJECT }}-docker-local/applications
+          platforms: linux/amd64,linux/arm64
           push: true
           skip-setup: true
           builder-name: ${{'{'}}{ steps.buildx.outputs.name }}
