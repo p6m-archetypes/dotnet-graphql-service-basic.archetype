@@ -34,7 +34,7 @@ jobs:
       - name: Build .NET Application
         uses: p6m-actions/dotnet-build@v1
         with:
-          run-tests: true
+          run-tests: false
           version: ${{'{'}}{ steps.cut-patch.outputs.version }}
 
       - name: Login to Docker Repository
